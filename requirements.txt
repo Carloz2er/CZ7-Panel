@@ -13,3 +13,4 @@ aiohttp
 itsdangerous
 alembic
 psutil
+stripe

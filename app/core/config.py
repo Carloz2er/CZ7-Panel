@@ -14,6 +14,11 @@ class Settings(BaseSettings):
     # Database
     DATABASE_URL: str
 
+    # Stripe
+    STRIPE_PUBLIC_KEY: str
+    STRIPE_SECRET_KEY: str
+    STRIPE_WEBHOOK_SECRET: str
+
 
     class Config:
         case_sensitive = True
