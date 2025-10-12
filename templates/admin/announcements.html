@@ -1,0 +1,45 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Gerenciar Anúncios{% endblock %}
+
+{% block content %}
+<h1>Gerenciar Anúncios Globais</h1>
+
+<h2>Anúncios Existentes</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Conteúdo</th>
+            <th>Status</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for announcement in announcements %}
+        <tr>
+            <td>{{ announcement.content }}</td>
+            <td>{{ "Ativo" if announcement.is_active else "Inativo" }}</td>
+            <td>
+                <form action="/admin/announcements/{{ announcement.id }}/delete" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="3">Nenhum anúncio encontrado.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2 style="margin-top: 2em;">Criar Novo Anúncio</h2>
+<form action="/admin/announcements" method="post">
+    <textarea name="content" placeholder="Conteúdo do anúncio..." required rows="3"></textarea>
+    <label>
+        <input type="checkbox" name="is_active" value="true" checked> Ativo
+    </label>
+    <br><br>
+    <button type="submit" class="btn">Criar Anúncio</button>
+</form>
+{% endblock %}

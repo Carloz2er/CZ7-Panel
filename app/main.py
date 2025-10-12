@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 
-from app.api import auth, tickets, announcements, status, services, files, console, backups, frontend
+from app.api import auth, tickets, announcements, status, services, files, console, backups, frontend, admin_frontend
 from app.core.config import settings
 from app.api.deps import get_db, get_current_user
 from app.models.user_model import User
@@ -53,6 +53,7 @@ app.include_router(files.router, prefix="/api/v1", tags=["files"])
 app.include_router(console.router, prefix="/api/v1", tags=["console"])
 app.include_router(backups.router, prefix="/api/v1", tags=["backups"])
 app.include_router(frontend.router, tags=["frontend"])
+app.include_router(admin_frontend.router, tags=["admin_frontend"])
 
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request, db: Session = Depends(get_db)):

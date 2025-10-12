@@ -1,0 +1,35 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Gerenciar Tickets{% endblock %}
+
+{% block content %}
+<h1>Gerenciar Tickets de Suporte</h1>
+<p>Aqui você pode ver e responder a todos os tickets dos usuários.</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Usuário</th>
+            <th>Status</th>
+            <th>Ação</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for ticket in tickets %}
+        <tr>
+            <td>#{{ ticket.id }}</td>
+            <td>{{ ticket.title }}</td>
+            <td>{{ ticket.owner.username }}</td>
+            <td>{{ ticket.status.value }}</td>
+            <td><a href="/tickets/{{ ticket.id }}" class="btn">Ver/Responder</a></td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="5">Nenhum ticket encontrado.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
