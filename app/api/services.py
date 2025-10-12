@@ -5,6 +5,7 @@ from typing import List
 from app.api.deps import get_db, get_current_user
 from app.models.user_model import User
 from app.models.service_model import Service, ServiceType
+from app.models.subscription import Subscription, SubscriptionStatus, Plan
 from app.schemas.service import Service as ServiceSchema, ServiceCreate
 from app.core import docker_manager, libvirt_manager
 
@@ -23,26 +24,34 @@ def create_service(
     service_in: ServiceCreate
 ):
     """
-    Create a new service for the current user.
+    Create a new service for the current user, checking plan limits.
     """
-    # Create service in DB first
-    new_service = Service(
-        name=service_in.name,
-        service_type=service_in.service_type,
-        owner_id=current_user.id
-    )
+    # 1. Check user's subscription and plan
+    subscription = db.query(Subscription).filter(Subscription.user_id == current_user.id, Subscription.status == SubscriptionStatus.ACTIVE).first()
+    if not subscription:
+        raise HTTPException(status_code=403, detail="No active subscription found.")
+
+    plan = db.query(Plan).filter(Plan.id == subscription.plan_id).first()
+
+    # 2. Check service count limit
+    service_count = db.query(Service).filter(Service.owner_id == current_user.id).count()
+    if service_count >= plan.max_services:
+        raise HTTPException(status_code=403, detail=f"Service limit reached for your plan ({plan.max_services} services).")
+
+    # 3. Create service in DB
+    new_service = Service(name=service_in.name, service_type=service_in.service_type, owner_id=current_user.id)
     db.add(new_service)
     db.commit()
     db.refresh(new_service)
 
     try:
+        # 4. Create backend (Docker or KVM) with plan resources
         if service_in.service_type == ServiceType.VPS:
-            # Handle VPS creation
             domain_name = f"cz7host-vps-{new_service.id}"
+            # This is a simplified call. Real implementation would pass plan resources to libvirt_manager
             libvirt_manager.create_vm(domain_name)
             new_service.libvirt_domain_name = domain_name
         else:
-            # Handle Docker container creation
             image_name = IMAGE_MAP.get(service_in.service_type)
             if not image_name:
                 raise HTTPException(status_code=400, detail="Unsupported service type")
@@ -53,7 +62,12 @@ def create_service(
                 environment["EULA"] = "TRUE"
 
             container = docker_manager.create_container(
-                service_id=new_service.id, image=image_name, name=container_name, environment=environment
+                service_id=new_service.id,
+                image=image_name,
+                name=container_name,
+                environment=environment,
+                mem_limit=f"{plan.ram_mb}m",
+                cpu_shares=int(plan.cpu_vcore * 1024) # Convert vCore share to Docker's relative value
             )
             new_service.docker_container_id = container.id
 

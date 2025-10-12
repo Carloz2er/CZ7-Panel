@@ -18,6 +18,12 @@ class Plan(Base):
     price = Column(Float, nullable=False)
     stripe_price_id = Column(String, unique=True, nullable=False)
 
+    # Resource Limits
+    ram_mb = Column(BigInteger, nullable=False, default=256)
+    cpu_vcore = Column(Float, nullable=False, default=0.5)
+    disk_gb = Column(BigInteger, nullable=False, default=1)
+    max_services = Column(BigInteger, nullable=False, default=1)
+
 class Subscription(Base):
     __tablename__ = "subscriptions"
     id = Column(BigInteger, primary_key=True)
