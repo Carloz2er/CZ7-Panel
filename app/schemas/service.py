@@ -12,6 +12,7 @@ class Service(ServiceBase):
     id: int
     owner_id: int
     docker_container_id: str | None = None
+    libvirt_domain_name: str | None = None
 
     class Config:
         from_attributes = True

@@ -7,11 +7,16 @@ from app.core.config import settings
 from app.api.deps import get_db, get_current_user
 from app.models.user import User
 from app.schemas.user import User as UserSchema
+from app.core.libvirt_manager import close_connection as close_libvirt_connection
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
     version=settings.PROJECT_VERSION
 )
+
+@app.on_event("shutdown")
+def shutdown_event():
+    close_libvirt_connection()
 
 # Add session middleware
 app.add_middleware(
