@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - CZ7 Host</title>
+    <style>
+        body { font-family: sans-serif; background-color: #1a1a2e; color: #ffffff; margin: 2em; }
+        .container { max-width: 1200px; margin: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 2em; }
+        th, td { padding: 12px; border-bottom: 1px solid #3a3a5e; text-align: left; }
+        th { background-color: #2a2a4e; }
+        .btn { background-color: #7289da; color: white; padding: 8px 15px; text-decoration: none; border-radius: 5px; border: none; cursor: pointer; }
+        .btn-danger { background-color: #e74c3c; }
+        .btn-success { background-color: #2ecc71; }
+        .btn-warning { background-color: #f1c40f; }
+        h1, h2 { color: #e0e1dd; }
+        a { color: #7289da; }
+        .status-running { color: #2ecc71; }
+        .status-stopped { color: #e74c3c; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Dashboard de Serviços</h1>
+        <p>Olá, {{ user.username }}! <a href="/api/v1/auth/logout">Logout</a></p>
+
+        <h2>Meus Serviços</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Tipo</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for service in services %}
+                <tr>
+                    <td>{{ service.name }}</td>
+                    <td>{{ service.service_type.value }}</td>
+                    <td>
+                        <span class="status-{{ service_status.get(service.id, 'unknown') }}">
+                            {{ service_status.get(service.id, 'unknown') }}
+                        </span>
+                    </td>
+                    <td>
+                        <form action="/actions/start-service" method="post" style="display: inline;">
+                            <input type="hidden" name="service_id" value="{{ service.id }}">
+                            <button type="submit" class="btn btn-success">Start</button>
+                        </form>
+                        <form action="/actions/stop-service" method="post" style="display: inline;">
+                            <input type="hidden" name="service_id" value="{{ service.id }}">
+                            <button type="submit" class="btn btn-warning">Stop</button>
+                        </form>
+                        <form action="/actions/delete-service" method="post" style="display: inline;">
+                            <input type="hidden" name="service_id" value="{{ service.id }}">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4">Você ainda não tem nenhum serviço.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h2 style="margin-top: 2em;">Criar Novo Serviço</h2>
+        <form action="/actions/create-service" method="post">
+            <input type="text" name="name" placeholder="Nome do Serviço" required>
+            <select name="service_type" required>
+                <option value="MINECRAFT_PAPER">Minecraft Paper</option>
+                <option value="VPS">VPS</option>
+            </select>
+            <button type="submit" class="btn">Criar</button>
+        </form>
+    </div>
+</body>
+</html>

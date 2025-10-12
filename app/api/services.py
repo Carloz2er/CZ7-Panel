@@ -3,8 +3,8 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from app.api.deps import get_db, get_current_user
-from app.models.user import User
-from app.models.service import Service, ServiceType
+from app.models.user_model import User
+from app.models.service_model import Service, ServiceType
 from app.schemas.service import Service as ServiceSchema, ServiceCreate
 from app.core import docker_manager, libvirt_manager
 

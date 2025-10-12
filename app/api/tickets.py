@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from app.api.deps import get_db, get_current_user
-from app.models.user import User
+from app.models.user_model import User
 from app.models.ticket import Ticket, TicketMessage
 from app.schemas.ticket import Ticket as TicketSchema, TicketCreate, TicketMessageCreate
 
