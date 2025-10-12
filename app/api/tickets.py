@@ -21,7 +21,7 @@ def create_ticket(
     """
     new_ticket = Ticket(title=ticket_in.title, owner_id=current_user.id)
     db.add(new_ticket)
-    db.flush()  # Flush to get the new_ticket.id
+    db.flush()
 
     first_message = TicketMessage(
         content=ticket_in.initial_message,

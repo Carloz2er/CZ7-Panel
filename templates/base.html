@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CZ7 Host{% endblock %}</title>
+    <style>
+        body { font-family: sans-serif; background-color: #1a1a2e; color: #ffffff; margin: 0; padding: 0; }
+        .announcement-bar { background-color: #e74c3c; color: white; text-align: center; padding: 10px; font-weight: bold; }
+        .container { max-width: 1200px; margin: auto; padding: 2em; }
+        table { width: 100%; border-collapse: collapse; margin-top: 2em; }
+        th, td { padding: 12px; border-bottom: 1px solid #3a3a5e; text-align: left; }
+        th { background-color: #2a2a4e; }
+        .btn { background-color: #7289da; color: white; padding: 8px 15px; text-decoration: none; border-radius: 5px; border: none; cursor: pointer; }
+        .btn-danger { background-color: #e74c3c; }
+        .btn-success { background-color: #2ecc71; }
+        .btn-warning { background-color: #f1c40f; }
+        h1, h2 { color: #e0e1dd; }
+        a { color: #7289da; }
+        .status-running { color: #2ecc71; }
+        .status-stopped { color: #e74c3c; }
+        .path-nav { margin-bottom: 1em; }
+        .message-list { margin-top: 2em; }
+        .message { background-color: #2a2a4e; padding: 15px; border-radius: 5px; margin-bottom: 1em; }
+        .message-author { font-weight: bold; color: #7289da; }
+        .message-date { font-size: 0.8em; color: #999; }
+        textarea { width: 100%; box-sizing: border-box; padding: 10px; border-radius: 5px; border: 1px solid #3a3a5e; background-color: #2a2a4e; color: white; }
+        input, select { padding: 10px; border-radius: 5px; border: 1px solid #3a3a5e; background-color: #2a2a4e; color: white; }
+    </style>
+</head>
+<body>
+    {% if announcements %}
+    <div class="announcement-bar">
+        {% for announcement in announcements %}
+            <p>{{ announcement.content }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>
