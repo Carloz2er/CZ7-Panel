@@ -2,7 +2,7 @@ from fastapi import FastAPI, Depends
 from starlette.middleware.sessions import SessionMiddleware
 from sqlalchemy.orm import Session
 
-from app.api import auth, tickets, announcements, status, services, files, console
+from app.api import auth, tickets, announcements, status, services, files, console, backups
 from app.core.config import settings
 from app.api.deps import get_db, get_current_user
 from app.models.user import User
@@ -33,6 +33,7 @@ app.include_router(status.router, prefix="/api/v1/status", tags=["status"])
 app.include_router(services.router, prefix="/api/v1/services", tags=["services"])
 app.include_router(files.router, prefix="/api/v1", tags=["files"])
 app.include_router(console.router, prefix="/api/v1", tags=["console"])
+app.include_router(backups.router, prefix="/api/v1", tags=["backups"])
 
 @app.get("/")
 def read_root():

@@ -5,3 +5,4 @@ from app.models.user import User
 from app.models.ticket import Ticket, TicketMessage
 from app.models.announcement import Announcement
 from app.models.service import Service
+from app.models.backup import Backup
