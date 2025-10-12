@@ -1,0 +1,12 @@
+fastapi
+uvicorn[standard]
+pydantic-settings
+sqlalchemy
+psycopg2-binary
+docker
+libvirt-python
+requests
+httpx-oauth[discord]
+authlib
+aiohttp
+itsdangerous
