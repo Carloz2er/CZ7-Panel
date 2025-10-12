@@ -53,7 +53,7 @@ def create_service(
                 environment["EULA"] = "TRUE"
 
             container = docker_manager.create_container(
-                image=image_name, name=container_name, environment=environment
+                service_id=new_service.id, image=image_name, name=container_name, environment=environment
             )
             new_service.docker_container_id = container.id
 
