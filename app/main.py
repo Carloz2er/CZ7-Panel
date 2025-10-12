@@ -1,10 +1,10 @@
-from fastapi import FastAPI, Request, Depends
+from fastapi import FastAPI, Depends
 from starlette.middleware.sessions import SessionMiddleware
 from sqlalchemy.orm import Session
 
-from app.api import auth
+from app.api import auth, tickets
 from app.core.config import settings
-from app.api.deps import get_db
+from app.api.deps import get_db, get_current_user
 from app.models.user import User
 from app.schemas.user import User as UserSchema
 
@@ -20,22 +20,17 @@ app.add_middleware(
     max_age=60 * 60 * 24 * 7  # one week
 )
 
-# Include the auth router
+# Include the routers
 app.include_router(auth.router, prefix="/api/v1/auth", tags=["auth"])
+app.include_router(tickets.router, prefix="/api/v1/tickets", tags=["tickets"])
 
 @app.get("/")
 def read_root():
     return {"message": f"Bem-vindo à API da {settings.PROJECT_NAME}"}
 
 @app.get("/api/v1/users/me", response_model=UserSchema)
-def read_user_me(request: Request, db: Session = Depends(get_db)):
-    user_id = request.session.get('user_id')
-    if not user_id:
-        return {"error": "Not logged in"}
-
-    user = db.query(User).filter(User.id == user_id).first()
-    if not user:
-        # This case should not happen if session is managed correctly
-        return {"error": "User not found"}
-
-    return user
+def read_user_me(current_user: User = Depends(get_current_user)):
+    """
+    Get current user details.
+    """
+    return current_user
