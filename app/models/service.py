@@ -10,6 +10,7 @@ class ServiceType(str, enum.Enum):
     MINECRAFT_VANILLA = "MINECRAFT_VANILLA"
     PYTHON_BOT = "PYTHON_BOT"
     NODEJS_APP = "NODEJS_APP"
+    VPS = "VPS"
 
 class Service(Base):
     __tablename__ = "services"
@@ -19,7 +20,8 @@ class Service(Base):
     service_type = Column(Enum(ServiceType), nullable=False)
     owner_id = Column(BigInteger, ForeignKey("users.id"), nullable=False)
 
-    docker_container_id = Column(String, unique=True, nullable=True) # Can be null until container is created
+    docker_container_id = Column(String, unique=True, nullable=True)
+    libvirt_domain_name = Column(String, unique=True, nullable=True)
     # plan_id = Column(BigInteger, ForeignKey("plans.id"), nullable=False) # To be added later
 
     owner = relationship("User")
