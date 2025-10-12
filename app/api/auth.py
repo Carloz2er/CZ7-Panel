@@ -8,6 +8,8 @@ from starlette.responses import RedirectResponse
 from app.api.deps import get_db
 from app.core.config import settings
 from app.models.user_model import User
+from app.models.subscription import Plan, Subscription, SubscriptionStatus
+from datetime import datetime, timedelta
 
 router = APIRouter()
 
@@ -67,6 +69,19 @@ async def auth_callback(request: Request, db: Session = Depends(get_db)):
             avatar=profile.get('avatar'),
         )
         db.add(db_user)
+        db.flush() # Flush to get the user ID
+
+        # Assign free plan on registration
+        free_plan = db.query(Plan).filter(Plan.name == "Free").first()
+        if free_plan:
+            new_subscription = Subscription(
+                user_id=db_user.id,
+                plan_id=free_plan.id,
+                stripe_subscription_id=f"free_{db_user.id}", # Placeholder for free tier
+                status=SubscriptionStatus.ACTIVE,
+                current_period_end=datetime.utcnow() + timedelta(days=9999) # Effectively forever
+            )
+            db.add(new_subscription)
 
     db.commit()
     db.refresh(db_user)

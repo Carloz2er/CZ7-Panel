@@ -7,6 +7,10 @@ class Plan(BaseModel):
     name: str
     price: float
     stripe_price_id: str
+    ram_mb: int
+    cpu_vcore: float
+    disk_gb: int
+    max_services: int
 
     class Config:
         from_attributes = True
