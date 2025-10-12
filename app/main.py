@@ -11,11 +11,23 @@ from app.api.deps import get_db, get_current_user
 from app.models.user_model import User
 from app.schemas.user import User as UserSchema
 from app.core.libvirt_manager import close_connection as close_libvirt_connection
+from app.models.announcement import Announcement
+from app.db.session import SessionLocal
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
     version=settings.PROJECT_VERSION
 )
+
+@app.middleware("http")
+async def db_session_middleware(request: Request, call_next):
+    db = SessionLocal()
+    request.state.db = db
+    announcements = db.query(Announcement).filter(Announcement.is_active == True).all()
+    request.state.announcements = announcements
+    response = await call_next(request)
+    db.close()
+    return response
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Ticket #{{ ticket.id }} - CZ7 Host{% endblock %}
+
+{% block content %}
+<h1>Ticket #{{ ticket.id }}: {{ ticket.title }}</h1>
+<p>Status: {{ ticket.status.value }} | <a href="/tickets">Voltar para a lista</a></p>
+
+<div class="message-list">
+    {% for message in ticket.messages %}
+    <div class="message">
+        <p><span class="message-author">{{ message.author.username }}</span> <span class="message-date">{{ message.created_at }}</span></p>
+        <p>{{ message.content }}</p>
+    </div>
+    {% endfor %}
+</div>
+
+<h2 style="margin-top: 2em;">Adicionar Resposta</h2>
+<form action="/tickets/{{ ticket.id }}/reply" method="post">
+    <textarea name="content" placeholder="Sua resposta..." required rows="5"></textarea><br><br>
+    <button type="submit" class="btn">Enviar Resposta</button>
+</form>
+{% endblock %}

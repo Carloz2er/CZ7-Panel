@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Meus Tickets - CZ7 Host{% endblock %}
+
+{% block content %}
+<h1>Meus Tickets de Suporte</h1>
+<p><a href="/dashboard">Voltar para o Dashboard</a></p>
+
+<h2>Tickets Abertos</h2>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Status</th>
+            <th>Última Atualização</th>
+            <th>Ação</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for ticket in tickets %}
+        <tr>
+            <td>#{{ ticket.id }}</td>
+            <td>{{ ticket.title }}</td>
+            <td>{{ ticket.status.value }}</td>
+            <td>{{ ticket.updated_at or ticket.created_at }}</td>
+            <td><a href="/tickets/{{ ticket.id }}" class="btn">Ver Ticket</a></td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="5">Você não tem nenhum ticket.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2 style="margin-top: 2em;">Abrir Novo Ticket</h2>
+<form action="/tickets" method="post">
+    <input type="text" name="title" placeholder="Assunto do Ticket" required size="50"><br><br>
+    <textarea name="initial_message" placeholder="Descreva seu problema..." required rows="5" cols="52"></textarea><br><br>
+    <button type="submit" class="btn">Criar Ticket</button>
+</form>
+{% endblock %}
