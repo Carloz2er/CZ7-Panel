@@ -12,3 +12,4 @@ authlib
 aiohttp
 itsdangerous
 alembic
+psutil
