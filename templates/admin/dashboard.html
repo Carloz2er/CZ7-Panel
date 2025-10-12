@@ -1,0 +1,15 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Dashboard do Admin{% endblock %}
+
+{% block content %}
+<h1>Dashboard do Administrador</h1>
+<p>Bem-vindo, {{ user.username }}.</p>
+
+<h2>Estatísticas Gerais</h2>
+<ul>
+    <li><strong>Total de Usuários:</strong> {{ stats.total_users }}</li>
+    <li><strong>Total de Serviços:</strong> {{ stats.total_services }}</li>
+    <li><strong>Total de Tickets:</strong> {{ stats.total_tickets }}</li>
+</ul>
+{% endblock %}
