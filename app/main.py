@@ -1,8 +1,12 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Depends
 from starlette.middleware.sessions import SessionMiddleware
+from sqlalchemy.orm import Session
 
 from app.api import auth
 from app.core.config import settings
+from app.api.deps import get_db
+from app.models.user import User
+from app.schemas.user import User as UserSchema
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -23,10 +27,15 @@ app.include_router(auth.router, prefix="/api/v1/auth", tags=["auth"])
 def read_root():
     return {"message": f"Bem-vindo à API da {settings.PROJECT_NAME}"}
 
-@app.get("/api/v1/users/me")
-def read_user_me(request: Request):
-    user = request.session.get('user')
-    if not user:
+@app.get("/api/v1/users/me", response_model=UserSchema)
+def read_user_me(request: Request, db: Session = Depends(get_db)):
+    user_id = request.session.get('user_id')
+    if not user_id:
         return {"error": "Not logged in"}
-    # In a real app, you'd use the token to fetch fresh user data
-    return {"message": "Successfully authenticated", "user_token_data": user}
+
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        # This case should not happen if session is managed correctly
+        return {"error": "User not found"}
+
+    return user

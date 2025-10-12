@@ -5,11 +5,14 @@ class Settings(BaseSettings):
     PROJECT_VERSION: str = "0.1.0"
 
     # Discord OAuth
-    DISCORD_CLIENT_ID: str = "YOUR_CLIENT_ID_HERE"
-    DISCORD_CLIENT_SECRET: str = "YOUR_CLIENT_SECRET_HERE"
+    DISCORD_CLIENT_ID: str
+    DISCORD_CLIENT_SECRET: str
 
     # Session
-    SESSION_SECRET: str = "a_secure_random_string"
+    SESSION_SECRET: str
+
+    # Database
+    DATABASE_URL: str
 
 
     class Config:
