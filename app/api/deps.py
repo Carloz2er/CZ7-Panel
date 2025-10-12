@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from starlette.requests import Request
 
 from app.db.session import SessionLocal
-from app.models.user import User
+from app.models.user_model import User
 
 def get_db() -> Generator:
     try:

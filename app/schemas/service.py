@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from app.models.service import ServiceType
+from app.models.service_model import ServiceType
 
 class ServiceBase(BaseModel):
     name: str

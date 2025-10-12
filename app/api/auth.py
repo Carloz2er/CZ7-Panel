@@ -7,7 +7,7 @@ from starlette.responses import RedirectResponse
 
 from app.api.deps import get_db
 from app.core.config import settings
-from app.models.user import User
+from app.models.user_model import User
 
 router = APIRouter()
 

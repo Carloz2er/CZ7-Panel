@@ -4,7 +4,7 @@ from typing import List
 import io
 
 from app.api.deps import get_db, get_current_user
-from app.models.user import User
+from app.models.user_model import User
 from app.models.service import Service
 from app.schemas.file import FileItem
 from app.core import file_manager

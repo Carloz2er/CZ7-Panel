@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.api.deps import get_db
 from app.models.service import Service
-from app.models.user import User
+from app.models.user_model import User
 
 # This is a bit tricky, as WebSocket dependencies don't have access to request scope
 # We will need a custom dependency to get the user from a token passed in the query
