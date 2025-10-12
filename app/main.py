@@ -2,7 +2,7 @@ from fastapi import FastAPI, Depends
 from starlette.middleware.sessions import SessionMiddleware
 from sqlalchemy.orm import Session
 
-from app.api import auth, tickets
+from app.api import auth, tickets, announcements, status
 from app.core.config import settings
 from app.api.deps import get_db, get_current_user
 from app.models.user import User
@@ -23,6 +23,8 @@ app.add_middleware(
 # Include the routers
 app.include_router(auth.router, prefix="/api/v1/auth", tags=["auth"])
 app.include_router(tickets.router, prefix="/api/v1/tickets", tags=["tickets"])
+app.include_router(announcements.router, prefix="/api/v1/announcements", tags=["announcements"])
+app.include_router(status.router, prefix="/api/v1/status", tags=["status"])
 
 @app.get("/")
 def read_root():
