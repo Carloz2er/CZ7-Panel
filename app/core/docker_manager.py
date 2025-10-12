@@ -12,11 +12,19 @@ def get_docker_client():
         raise RuntimeError("Docker is not available or not configured correctly.")
     return client
 
-def create_container(image: str, name: str, command: str = None, ports: dict = None, volumes: dict = None, environment: dict = None, mem_limit: str = "256m", cpu_shares: int = 512):
+from app.core.file_manager import get_service_path
+
+def create_container(service_id: int, image: str, name: str, command: str = None, ports: dict = None, environment: dict = None, mem_limit: str = "256m", cpu_shares: int = 512):
     """
     Creates a new Docker container.
     """
     d_client = get_docker_client()
+
+    # Set up volume mount for the service
+    host_path = get_service_path(service_id)
+    host_path.mkdir(parents=True, exist_ok=True)
+    volumes = {str(host_path): {'bind': '/data', 'mode': 'rw'}}
+
     try:
         container = d_client.containers.create(
             image=image,
